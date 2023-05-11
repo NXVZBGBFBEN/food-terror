@@ -1,0 +1,14 @@
+{
+  "name": "food-terror",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/NXVZBGBFBEN/food-terror.git",
+  "author": "NXVZBGBFBEN <NXVZBGBFBEN@gmail.com> et al.",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.11.0",
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
+    "prettier": "^2.8.8"
+  }
+}
