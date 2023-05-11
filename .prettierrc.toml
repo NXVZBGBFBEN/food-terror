@@ -1,0 +1,10 @@
+# Prettier
+# cf. https://prettier.io
+
+printWidth = 140      # default=80
+tabWidth = 4          # default=2
+insertPragma = true   # default=false
+
+[[overrides]]
+files = ["*.json", "*.md", "*.yaml"]
+options.tabWidth = 2
