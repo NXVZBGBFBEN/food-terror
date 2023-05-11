@@ -1,7 +1,7 @@
 {
   "name": "food-terror",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./src/index.js",
   "repository": "https://github.com/NXVZBGBFBEN/food-terror.git",
   "author": {
     "name": "NXVZBGBFBEN",
@@ -26,6 +26,7 @@
     "eslint": "^8.40.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
     "prettier": "^2.8.8"
   }
 }
