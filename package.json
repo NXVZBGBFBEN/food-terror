@@ -3,7 +3,21 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/NXVZBGBFBEN/food-terror.git",
-  "author": "NXVZBGBFBEN <NXVZBGBFBEN@gmail.com> et al.",
+  "author": {
+    "name": "NXVZBGBFBEN",
+    "email": "NXVZBGBFBEN@gmail.com",
+    "url": "https://github.com/NXVZBGBFBEN"
+  },
+  "contributors": [
+    {
+      "name": "doit^6p",
+      "url": "https://github.com/c-6p"
+    },
+    {
+      "name": "トコトコ",
+      "url": "https://github.com/tokotoko9981"
+    }
+  ],
   "license": "MIT",
   "dependencies": {
     "discord.js": "^14.11.0",
