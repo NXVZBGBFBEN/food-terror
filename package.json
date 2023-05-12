@@ -1,7 +1,7 @@
 {
   "name": "food-terror",
   "version": "1.0.0",
-  "main": "./src/index.js",
+  "main": "src/main.js",
   "repository": "https://github.com/NXVZBGBFBEN/food-terror.git",
   "author": {
     "name": "NXVZBGBFBEN",
