@@ -19,3 +19,27 @@ parserOptions:
 #   環境的に問題ないもの - off
 rules:
   no-console: off
+  no-plusplus:
+    - error
+    - allowForLoopAfterthoughts: true
+  spaced-comment: warn
+
+  # eslint-plugin-import
+  # cf. https://github.com/import-js/eslint-plugin-import
+  import/extensions:
+    - warn
+    - always
+  import/order:
+    - warn
+    - groups:
+        - builtin
+        - external
+        - internal
+        - parent
+        - index
+        - sibling
+      newlines-between: always
+      alphabetize:
+        order: asc
+  import/newline-after-import:
+    - warn
