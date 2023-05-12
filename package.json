@@ -22,19 +22,20 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start-dev": "dotenv -e .env.development node .",
-    "start-stg": "dotenv -e .env.staging node .",
-    "start-prod": "dotenv -e .env.production node ."
+    "start-dev": "cross-env NODE_ENV=development node .",
+    "start-stg": "cross-env NODE_ENV=staging node .",
+    "start-prod": "cross-env NODE_ENV=production node ."
   },
   "dependencies": {
+    "config": "^3.3.9",
+    "cross-env": "^7.0.3",
     "discord-api-types": "^0.37.42",
     "discord.js": "^14.11.0",
-    "dotenv": "^16.0.3",
-    "dotenv-cli": "^7.2.1",
     "eslint": "^8.40.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
-    "prettier": "^2.8.8"
+    "prettier": "^2.8.8",
+    "toml": "^3.0.0"
   }
 }

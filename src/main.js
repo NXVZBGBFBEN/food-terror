@@ -1,6 +1,6 @@
 /** @format */
 
-import "dotenv/config.js";
+import config from "config";
 import { Client, Events, GatewayIntentBits } from "discord.js";
 
 const client = new Client({
@@ -12,6 +12,6 @@ client.on(Events.ClientReady, () => {
 });
 
 client
-    .login(process.env.TOKEN)
+    .login(config.get("token"))
     .then(() => console.log(`[LOGIN]: OK`))
     .catch(() => console.error(`[LOGIN]: ERR`));
