@@ -27,6 +27,7 @@
     "start-prod": "dotenv -e .env.production node ."
   },
   "dependencies": {
+    "discord-api-types": "^0.37.42",
     "discord.js": "^14.11.0",
     "dotenv": "^16.0.3",
     "dotenv-cli": "^7.2.1",
