@@ -14,7 +14,7 @@ const DIR_NAME = path.dirname(FILE_NAME);
  * コマンドを格納してあるディレクトリからコマンドを取り出して配列に格納する
  * @return {Promise<{data: SlashCommandBuilder, execute: function}[]>}
  */
-async function load() {
+async function loadCommand() {
     /* ディレクトリを参照してファイルを得る */
     const directoryPath = path.resolve(DIR_NAME, "../commands/");
     const commandFiles = ((dirPath) => {
@@ -26,7 +26,7 @@ async function load() {
         }
     })(directoryPath);
     /* ファイルからコマンドを取り出して配列に格納する
-     * (呼び出されるタイミングが分かっている為，for-ofおよびfor内でのawaitを許可) */
+     * (呼び出されるタイミングが分かっている為，for-ofおよびループ内でのawaitを許可) */
     /* eslint-disable no-restricted-syntax, no-await-in-loop */
     const commands = [];
     for (const fileName of commandFiles) {
