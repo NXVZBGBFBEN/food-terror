@@ -1,13 +1,29 @@
 /** @format */
 
 import config from "config";
-import { Client, Events, GatewayIntentBits } from "discord.js";
+import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 
+import loadCommand from "./functions/load-command.js";
+
+/* 初期化 */
 const client = new Client({
     intents: Object.values(GatewayIntentBits),
 });
+client.commands = new Collection();
 
-client.on(Events.ClientReady, () => {
+/* スラッシュコマンド読み込み */
+client.once(Events.ClientReady, async () => {
+    await loadCommand()
+        .then((readCommands) => {
+            for (let i = 0; i < readCommands.length; i++) {
+                client.commands.set(readCommands[i].data.name, readCommands[i]);
+            }
+            console.log(`[LOAD-COMMAND]: OK`);
+        })
+        .catch((e) => {
+            console.error(`[LOAD-COMMAND]: ERR: ${e}`);
+            client.destroy();
+        });
     console.log(`[READY]: ${client.user.tag} (${client.user.id})`);
 });
 
