@@ -14,7 +14,7 @@ const DIR_NAME = path.dirname(FILE_NAME);
  * コマンドを格納してあるディレクトリからコマンドを取り出して配列に格納する
  * @return {Promise<{data: SlashCommandBuilder, execute: function}[]>}
  */
-async function loadCommand() {
+export default async function loadCommand() {
     /* ディレクトリを参照してファイルを得る */
     const directoryPath = path.resolve(DIR_NAME, "../commands/");
     const commandFiles = ((dirPath) => {
