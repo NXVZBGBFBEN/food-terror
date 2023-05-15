@@ -7,7 +7,7 @@ import loadCommand from "./functions/load-command.js";
 
 /* 初期化 */
 const client = new Client({
-    intents: Object.values(GatewayIntentBits),
+    intents: [GatewayIntentBits.Guilds],
 });
 client.commands = new Collection();
 
