@@ -27,6 +27,19 @@ client.once(Events.ClientReady, async () => {
     console.log(`[READY]: ${client.user.tag} (${client.user.id})`);
 });
 
+client.on(Events.InteractionCreate, async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
+    const command = client.commands.get(interaction.commandName);
+    if (!command) return;
+    try {
+        await command.execute(interaction);
+        console.log(`[SLASH-COMMAND]: OK: \`/${command.data.name}\``);
+    } catch (e) {
+        await interaction.reply({ content: "エラーが発生しました．管理者に連絡してください．", ephemeral: true });
+        console.error(`[SLASH-COMMAND]: ERR: ${e}`);
+    }
+});
+
 client
     .login(config.get("token"))
     .then(() => console.log(`[LOGIN]: OK`))
