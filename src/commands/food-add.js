@@ -1,20 +1,23 @@
 /** @format */
 
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import cron from "node-cron";
 
 export default [
     {
         data: new SlashCommandBuilder()
             .setName("food_add")
             .setDescription("画像を登録し、指定した時間に投稿します。")
-            // .addStringOption((option) => option.setName("日時").setDescription("飯テロする日時をyyyymmddの形式で指定できます。").setRequired(false))
+            .addStringOption((option) =>
+                option.setName("日時").setDescription("送信する時間をMM-dd-hh-mmの形式で指定できます").setRequired(false)
+            )
             .addStringOption((option) => option.setName("説明").setDescription("画像についての説明を書けます").setRequired(false))
             .addStringOption((option) => option.setName("投稿者").setDescription("投稿者の名前を入力できます").setRequired(false))
             .addStringOption((option) => option.setName("料理名").setDescription("料理名を入力できます").setRequired(false))
             .addAttachmentOption((option) => option.setName("画像").setDescription("ファイルを添付できます").setRequired(false)),
 
         async execute(interaction) {
-            // const receivedTime = Number(interaction.option.getString("日時"));
+            const receivedTime = interaction.options.getString("日時");
             const receivedStringName = interaction.options.getString("投稿者");
             const receivedStringDish = interaction.options.getString("料理名");
             const receivedStringExplanation = interaction.options.getString("説明");
@@ -23,6 +26,19 @@ export default [
             let sendStringName = receivedStringName;
             let sendStringDish = receivedStringDish;
             let sendStringExplanation = receivedStringExplanation;
+
+            // receivedTimeの加工
+            if (receivedTime == null) {
+                await interaction.reply({ content: "時間指定しろカス", ephemeral: true });
+                return;
+            }
+
+            // 前:月日付時間分
+            // 後:分時間日付月
+            const arrayTime = receivedTime.split("-");
+            console.log(arrayTime);
+            const remakeTime = `00 ${arrayTime[3]} ${arrayTime[2]} ${arrayTime[1]} ${arrayTime[0]} *`;
+            console.log(remakeTime);
 
             // 例外処理
             if (sendStringName == null) {
@@ -61,7 +77,26 @@ export default [
                 ])
                 .setImage(receivedAttachment.url);
 
-            await interaction.reply({ embeds: [embedFood] });
+            await interaction.reply("おｋ");
+
+            async function ultimateExecute() {
+                await interaction.reply({ embeds: [embedFood] });
+            }
+
+            // await ultimateExecute();
+
+            // const task = await
+            cron.schedule(
+                `${remakeTime}`,
+                /* async */ () => {
+                    // await interaction.reply({embeds: [embedFood]});
+                    console.log("schedule通りです");
+                    ultimateExecute()
+                        .then(() => {})
+                        .catch((e) => console.log(`ultimateError! ${e}`));
+                }
+            );
+            await console.log("AAAAAAAAAAAAAAAAAA");
         },
     },
 ];
