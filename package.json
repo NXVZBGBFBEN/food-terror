@@ -24,7 +24,10 @@
   "scripts": {
     "start-dev": "cross-env NODE_ENV=development node .",
     "start-stg": "cross-env NODE_ENV=staging node .",
-    "start-prod": "cross-env NODE_ENV=production node ."
+    "start-prod": "cross-env NODE_ENV=production node .",
+    "cmd-dev": "cross-env NODE_ENV=development node ./utils/deploy-command.js",
+    "cmd-stg": "cross-env NODE_ENV=staging node ./utils/deploy-command.js",
+    "cmd-prod": "cross-env NODE_ENV=production node ./utils/deploy-command.js"
   },
   "dependencies": {
     "config": "^3.3.9",
