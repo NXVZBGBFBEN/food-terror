@@ -2,7 +2,7 @@
 
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
-import commands from "../main.js";
+import client from "../main.js";
 
 export default [
     {
@@ -16,7 +16,7 @@ export default [
                 })
                 .setTitle("ヘルプ")
                 .setDescription("コマンド一覧")
-                .addFields(commands.map((e) => ({ name: `/${e.data.name}`, value: e.data.description })));
+                .addFields(client.commands.map((e) => ({ name: `/${e.data.name}`, value: e.data.description })));
             interaction.reply({ embeds: [help] });
         },
     },

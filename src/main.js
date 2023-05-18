@@ -1,7 +1,7 @@
 /** @format */
 
 import config from "config";
-import {Client, Collection, Events, GatewayIntentBits} from "discord.js";
+import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 
 import loadCommand from "./functions/load-command.js";
 
@@ -10,9 +10,7 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds],
 });
 
-export default client;
 client.commands = new Collection();
-export default client.commands;
 
 /* スラッシュコマンド読み込み */
 client.once(Events.ClientReady, async () => {
@@ -38,7 +36,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await command.execute(interaction);
         console.log(`[SLASH-COMMAND]: OK: \`/${command.data.name}\``);
     } catch (e) {
-        await interaction.reply({content: "エラーが発生しました．管理者に連絡してください．", ephemeral: true});
+        await interaction.reply({ content: "エラーが発生しました．管理者に連絡してください．", ephemeral: true });
         console.error(`[SLASH-COMMAND]: ERR: ${e}`);
     }
 });
@@ -47,3 +45,5 @@ client
     .login(config.get("token"))
     .then(() => console.log(`[LOGIN]: OK`))
     .catch(() => console.error(`[LOGIN]: ERR`));
+
+export default client;
