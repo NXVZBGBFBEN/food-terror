@@ -6,7 +6,6 @@ import cron from "node-cron";
 
 import client from "../main.js";
 
-
 export default [
     {
         data: new SlashCommandBuilder()
