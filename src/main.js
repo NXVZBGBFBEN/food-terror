@@ -45,5 +45,3 @@ client
     .login(config.get("token"))
     .then(() => console.log(`[LOGIN]: OK`))
     .catch(() => console.error(`[LOGIN]: ERR`));
-
-export default client;

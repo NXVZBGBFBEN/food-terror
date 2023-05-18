@@ -4,8 +4,6 @@ import config from "config";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import cron from "node-cron";
 
-import client from "../main.js";
-
 export default [
     {
         data: new SlashCommandBuilder()
@@ -84,7 +82,7 @@ export default [
 
             // const task = await
             await cron.schedule(`${remakeTime}`, async () => {
-                await client.channels.cache.get(config.get("channel")).send({ embeds: [embedFood] });
+                await interaction.client.channels.cache.get(config.get("channel")).send({ embeds: [embedFood] });
                 console.log("schedule通りです");
             });
             await console.log("AAAAAAAAAAAAAAAAAA");
