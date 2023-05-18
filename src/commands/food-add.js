@@ -30,19 +30,6 @@ export default [
             let sendStringDish = receivedStringDish;
             let sendStringExplanation = receivedStringExplanation;
 
-            // receivedTimeの加工
-            if (receivedTime == null) {
-                await interaction.reply({ content: "時間指定しろカス", ephemeral: true });
-                return;
-            }
-
-            // 前:月日付時間分
-            // 後:分時間日付月
-            const arrayTime = receivedTime.split("-");
-            console.log(arrayTime);
-            const remakeTime = `00 ${arrayTime[3]} ${arrayTime[2]} ${arrayTime[1]} ${arrayTime[0]} *`;
-            console.log(remakeTime);
-
             // 例外処理
             if (sendStringName == null) {
                 sendStringName = "匿名";
@@ -79,6 +66,21 @@ export default [
                     },
                 ])
                 .setImage(receivedAttachment.url);
+
+            // receivedTimeの加工
+            if (receivedTime == null) {
+                await interaction.reply({ embeds: [embedFood]});
+                return;
+            }
+
+            // 前:月日付時間分
+            // 後:分時間日付月
+            const arrayTime = receivedTime.split("-");
+            console.log(arrayTime);
+            const remakeTime = `00 ${arrayTime[3]} ${arrayTime[2]} ${arrayTime[1]} ${arrayTime[0]} *`;
+            console.log(remakeTime);
+
+
 
             await interaction.reply("おｋ");
 
