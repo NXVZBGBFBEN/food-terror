@@ -10,6 +10,7 @@ const client = new Client({
     intents: [GatewayIntentBits.Guilds],
 });
 client.commands = new Collection();
+export default client.commands;
 
 /* スラッシュコマンド読み込み */
 client.once(Events.ClientReady, async () => {
