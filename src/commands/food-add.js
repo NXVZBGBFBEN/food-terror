@@ -1,7 +1,11 @@
 /** @format */
 
+import config from "config";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import cron from "node-cron";
+
+import client from "../main.js";
+
 
 export default [
     {
@@ -79,23 +83,11 @@ export default [
 
             await interaction.reply("おｋ");
 
-            async function ultimateExecute() {
-                await interaction.reply({ embeds: [embedFood] });
-            }
-
-            // await ultimateExecute();
-
             // const task = await
-            cron.schedule(
-                `${remakeTime}`,
-                /* async */ () => {
-                    // await interaction.reply({embeds: [embedFood]});
-                    console.log("schedule通りです");
-                    ultimateExecute()
-                        .then(() => {})
-                        .catch((e) => console.log(`ultimateError! ${e}`));
-                }
-            );
+            await cron.schedule(`${remakeTime}`, async () => {
+                await client.channels.cache.get(config.get("channel")).send({ embeds: [embedFood] });
+                console.log("schedule通りです");
+            });
             await console.log("AAAAAAAAAAAAAAAAAA");
         },
     },

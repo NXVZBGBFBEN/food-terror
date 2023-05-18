@@ -9,6 +9,8 @@ import loadCommand from "./functions/load-command.js";
 const client = new Client({
     intents: [GatewayIntentBits.Guilds],
 });
+
+export default client;
 client.commands = new Collection();
 
 /* スラッシュコマンド読み込み */
