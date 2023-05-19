@@ -53,11 +53,36 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 });
 
+const channelLog = [];
+let i = 0;
+
+// thinking...
+
 client.on(Events.MessageCreate, async (message) => {
-    console.log(message.channel);
+    // channelTarget.targetChannel = message.channel
+    // message.channel
+    channelLog[i] = message.channel.id;
 
+    i += 1;
 
+    if(i > 9){
+        i = 0;
+    }
+
+    for(let w = 0; w < 10; w++){
+
+    }
+
+    channelTarget = {
+        "targetChannel":message.channel.id // in the message.channel.id
+    }
+    console.log(`channel-ID: ${message.channel}`);
+    console.log(`channel-ID-ID???????: ${message.channel.id}`);
+    console.log(`final: ${JSON.stringify(channelTarget)}`);
 });
+
+// 私はじゃあゲリラ飯テロするチャンネルを選ぶコードを書くわ
+// OKAY
 
 client
     .login(config.get("token"))
