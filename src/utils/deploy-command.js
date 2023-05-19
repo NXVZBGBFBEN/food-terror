@@ -25,6 +25,6 @@ const rest = new REST({ version: "10" }).setToken(config.get("token"));
         });
         console.log(`[REGISTER-COMMAND/GUILD]: OK: ${commandData.length} command(s) registered`);
     } catch (e) {
-        console.error(`[REGISTER-COMMAND/GUILD]: ERR: ${e}`);
+        console.error(`[REGISTER-COMMAND]: ERR: ${e}`);
     }
 })();
