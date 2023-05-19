@@ -1,9 +1,7 @@
 /** @format */
 
-import config from "config";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import cron from "node-cron";
-
 import client from "../main.js";
 
 export default [
@@ -17,7 +15,8 @@ export default [
             .addStringOption((option) => option.setName("説明").setDescription("画像についての説明を書けます").setRequired(false))
             .addStringOption((option) => option.setName("投稿者").setDescription("投稿者の名前を入力できます").setRequired(false))
             .addStringOption((option) => option.setName("料理名").setDescription("料理名を入力できます").setRequired(false))
-            .addAttachmentOption((option) => option.setName("画像").setDescription("ファイルを添付できます").setRequired(false)),
+            .addAttachmentOption((option) => option.setName("画像").setDescription("ファイルを添付できます").setRequired(false))
+            .addStringOption((option) => option.setName("ゲリラモード").setDescription("onと入力した場合、直近で最もメッセージが送信されたチャンネルに投稿します。").setRequired(false)),
 
         async execute(interaction) {
             const receivedTime = interaction.options.getString("日時");
@@ -25,6 +24,7 @@ export default [
             const receivedStringDish = interaction.options.getString("料理名");
             const receivedStringExplanation = interaction.options.getString("説明");
             const receivedAttachment = interaction.options.getAttachment("画像");
+            // const guerrillaSwitch = (interaction.options.getString("ゲリラモード") === "on");
 
             let sendStringName = receivedStringName;
             let sendStringDish = receivedStringDish;
@@ -44,6 +44,11 @@ export default [
                 await interaction.reply({ content: "画像が無かったら飯テロはできないよ！", ephemeral: true });
                 return;
             }
+
+
+
+
+
 
             // /*入力されたデータの確認用
             // console.log(receivedTime);
@@ -80,16 +85,16 @@ export default [
             const remakeTime = `00 ${arrayTime[3]} ${arrayTime[2]} ${arrayTime[1]} ${arrayTime[0]} *`;
             console.log(remakeTime);
 
-
-
             await interaction.reply("おｋ");
 
             // const task = await
             await cron.schedule(`${remakeTime}`, async () => {
-                await client.channels.cache.get(config.get("channel")).send({ embeds: [embedFood] });
+                // await client.channels.cache.get(config.get("channel")).send({ embeds: [embedFood] });
+                await client.channels.cache.get(`${interaction.channelId}`).send({ embeds: [embedFood] });
                 console.log("schedule通りです");
             });
-            await console.log("AAAAAAAAAAAAAAAAAA");
+
+            console.log(interaction);
         },
     },
 ];
