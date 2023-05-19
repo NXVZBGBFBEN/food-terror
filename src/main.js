@@ -11,6 +11,7 @@ import loadCommand from "./functions/load-command.js";
 
 const FILE_NAME = url.fileURLToPath(import.meta.url);
 const DIR_NAME = path.dirname(FILE_NAME);
+const jsonPath = path.resolve(DIR_NAME, "channel-target.json");
 
 /* 初期化 */
 const client = new Client({
@@ -19,8 +20,11 @@ const client = new Client({
 
 client.commands = new Collection();
 
+/* JSON初期化 */
+fs.writeFileSync(jsonPath, '{"targetChannel":""}');
+
 /* JSON読み込み */
-let channelTarget = JSON.parse(fs.readFileSync(path.resolve(DIR_NAME, "channel-target.json"), "utf8"));
+let channelTarget = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
 console.log(`load: ${JSON.stringify(channelTarget)}`);
 
 /* スラッシュコマンド読み込み */
@@ -57,8 +61,8 @@ let channelCount = {};
 let i = 0;
 
 client.on(Events.MessageCreate, async (message) => {
+    // 直近10投稿が最も多く投稿されたチャンネルを選出
     channelCount = {};
-
     channelLog[i] = message.channel.id;
     i += 1;
     if (i > 9) i = 0;
@@ -73,17 +77,16 @@ client.on(Events.MessageCreate, async (message) => {
 
     let biggerObj = 0;
 
-    for(let h = 0; h < objs.length; h++){
-        if(biggerObj <= objs[h] + 0) biggerObj = h;
+    for (let h = 0; h < objs.length; h++) {
+        if (biggerObj <= objs[h] + 0) biggerObj = h;
     }
 
     channelTarget = {
         targetChannel: keys[biggerObj], // in the message.channel.id
     };
 
-    // console.log(`channel-ID: ${message.channel}`);
-    // console.log(`channel-ID-ID???????: ${message.channel.id}`);
-    console.log(`final: ${JSON.stringify(channelTarget)}`);
+    // JSON書き込み
+    fs.writeFileSync(jsonPath, JSON.stringify(channelTarget));
 });
 
 client
