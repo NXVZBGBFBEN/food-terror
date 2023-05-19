@@ -44,6 +44,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
 client.on(Events.MessageCreate, async (message) => {
     console.log(message.channel);
 
+
 });
 
 
