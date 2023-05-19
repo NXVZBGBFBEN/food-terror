@@ -78,7 +78,7 @@ export default [
                 await interaction.reply({ content: "飯テロを受付ました", ephemeral: true });
 
                 // JSON読み込み
-                const jsonTarget = JSON.parse(fs.readFileSync(path.resolve(DIR_NAME, "channel-target.json"), "utf8"));
+                const jsonTarget = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
                 // ゲリラモードの場合の処理
                 if (guerrillaSwitch) {
                     willuseId = jsonTarget.targetChannel;
