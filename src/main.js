@@ -1,13 +1,13 @@
 /** @format */
 
 import config from "config";
-import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
+import { Client, Collection, Events, GatewayIntentBits} from "discord.js";
 
 import loadCommand from "./functions/load-command.js";
 
 /* 初期化 */
 const client = new Client({
-    intents: [GatewayIntentBits.Guilds],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
 });
 
 client.commands = new Collection();
@@ -40,6 +40,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
         console.error(`[SLASH-COMMAND]: ERR: ${e}`);
     }
 });
+
+client.on(Events.MessageCreate, async (message) => {
+    console.log(message.channel);
+
+});
+
+
 
 client
     .login(config.get("token"))
