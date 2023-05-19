@@ -5,10 +5,9 @@ import path from "path";
 import url from "url";
 
 import config from "config";
-import {Client, Collection, Events, GatewayIntentBits} from "discord.js";
+import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
 
 import loadCommand from "./functions/load-command.js";
-
 
 const FILE_NAME = url.fileURLToPath(import.meta.url);
 const DIR_NAME = path.dirname(FILE_NAME);
@@ -21,7 +20,7 @@ const client = new Client({
 client.commands = new Collection();
 
 /* JSON読み込み */
-let channelTarget = JSON.parse(fs.readFileSync(path.resolve(DIR_NAME,"channel-target.json"), "utf8"));
+let channelTarget = JSON.parse(fs.readFileSync(path.resolve(DIR_NAME, "channel-target.json"), "utf8"));
 console.log(`load: ${JSON.stringify(channelTarget)}`);
 
 /* スラッシュコマンド読み込み */
@@ -48,41 +47,44 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await command.execute(interaction);
         console.log(`[SLASH-COMMAND]: OK: \`/${command.data.name}\``);
     } catch (e) {
-        await interaction.reply({content: "エラーが発生しました．管理者に連絡してください．", ephemeral: true});
+        await interaction.reply({ content: "エラーが発生しました．管理者に連絡してください．", ephemeral: true });
         console.error(`[SLASH-COMMAND]: ERR: ${e}`);
     }
 });
 
 const channelLog = [];
+let channelCount = {};
 let i = 0;
 
-// thinking...
-
 client.on(Events.MessageCreate, async (message) => {
-    // channelTarget.targetChannel = message.channel
-    // message.channel
+    channelCount = {};
+
     channelLog[i] = message.channel.id;
-
     i += 1;
+    if (i > 9) i = 0;
 
-    if(i > 9){
-        i = 0;
+    for (let w = 0; w < channelLog.length; w++) {
+        const elm = channelLog[w];
+        channelCount[elm] = (channelCount[elm] || 0) + 1;
     }
 
-    for(let w = 0; w < 10; w++){
+    const keys = Object.keys(channelCount);
+    const objs = Object.values(channelCount);
 
+    let biggerObj = 0;
+
+    for(let h = 0; h < objs.length; h++){
+        if(biggerObj <= objs[h] + 0) biggerObj = h;
     }
 
     channelTarget = {
-        "targetChannel":message.channel.id // in the message.channel.id
-    }
-    console.log(`channel-ID: ${message.channel}`);
-    console.log(`channel-ID-ID???????: ${message.channel.id}`);
+        targetChannel: keys[biggerObj], // in the message.channel.id
+    };
+
+    // console.log(`channel-ID: ${message.channel}`);
+    // console.log(`channel-ID-ID???????: ${message.channel.id}`);
     console.log(`final: ${JSON.stringify(channelTarget)}`);
 });
-
-// 私はじゃあゲリラ飯テロするチャンネルを選ぶコードを書くわ
-// OKAY
 
 client
     .login(config.get("token"))
