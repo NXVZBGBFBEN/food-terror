@@ -39,6 +39,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
     "node-cron": "^3.0.2",
+    "node-schedule": "^2.1.1",
     "prettier": "^2.8.8",
     "toml": "^3.0.0"
   }
