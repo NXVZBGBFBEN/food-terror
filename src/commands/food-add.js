@@ -1,10 +1,11 @@
 /** @format */
 
-import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
-import cron from "node-cron";
 import fs from "fs";
 import path from "path";
 import url from "url";
+
+import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import schedule from "node-schedule";
 
 export default [
     {
@@ -26,7 +27,6 @@ export default [
             ),
 
         async execute(interaction) {
-
             // 入力されたoptionの代入
             const receivedTime = interaction.options.getString("日時");
             let receivedStringName = interaction.options.getString("投稿者");
@@ -38,8 +38,12 @@ export default [
             const FILE_NAME = url.fileURLToPath(import.meta.url);
             const DIR_NAME = path.dirname(path.dirname(FILE_NAME));
             const jsonPath = path.resolve(DIR_NAME, "channel-target.json");
+            const jsonTarget = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
 
-            let willuseId = interaction.channelId;
+            // ゲリラモード用
+            // 評価する式 ? trueの場合の処理 : falseの場合の処理
+            const targetChannel = guerrillaSwitch ? jsonTarget.targetChannel : interaction.channelId;
+            const targetGuild = interaction.guildId;
 
             // 例外処理
             if (receivedStringName == null) {
@@ -73,38 +77,50 @@ export default [
 
             // 即時実行
             if (receivedTime == null) {
-
                 // 受付確認
                 await interaction.reply({ content: "飯テロを受付ました", ephemeral: true });
-
-                // JSON読み込み
-                const jsonTarget = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-                // ゲリラモードの場合の処理
-                if (guerrillaSwitch) {
-                    willuseId = jsonTarget.targetChannel;
-                }
-                await interaction.client.channels.cache.get(`${willuseId}`).send({ embeds: [embedFood] });
-
+                // prettier-ignore
+                await interaction.client
+                    .guilds.cache.get(targetGuild)
+                    .channels.cache.get(targetChannel)
+                    .send({embeds: [embedFood]});
                 return;
             }
 
             // 前:月日付時間分
             // 後:分時間日付月
+            // const remakeTime = `00 ${arrayTime[3]} ${arrayTime[2]} ${arrayTime[1]} ${arrayTime[0]} *`;
+
             const arrayTime = receivedTime.split("-");
-            const remakeTime = `00 ${arrayTime[3]} ${arrayTime[2]} ${arrayTime[1]} ${arrayTime[0]} *`;
+            const date = new Date();
+            const executionDate = new Date(
+                date.getFullYear(),
+                parseInt(arrayTime[0], 10) - 1,
+                parseInt(arrayTime[1], 10),
+                parseInt(arrayTime[2], 10),
+                parseInt(arrayTime[3], 10)
+            );
+
+            /* 
+            const jobData = [
+                {
+                    executionDate,
+                    targetGuild,
+                    targetChannel,
+                    item: embedFood,
+                },
+            ];
+             */
 
             // 受付確認
             await interaction.reply({ content: "飯テロを受付ました", ephemeral: true });
-
             // 実行(時間指定)
-            await cron.schedule(`${remakeTime}`, async () => {
-                // JSON読み込み
-                const jsonTarget = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-                // ゲリラモードの場合の処理
-                if (guerrillaSwitch) {
-                    willuseId = jsonTarget.targetChannel;
-                }
-                await interaction.client.channels.cache.get(`${willuseId}`).send({ embeds: [embedFood] });
+            await schedule.scheduleJob(executionDate, async () => {
+                // prettier-ignore
+                await interaction.client
+                    .guilds.cache.get(targetGuild)
+                    .channels.cache.get(targetChannel)
+                    .send({embeds: [embedFood]});
             });
         },
     },
