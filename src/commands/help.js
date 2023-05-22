@@ -2,8 +2,6 @@
 
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
-import client from "../main.js";
-
 export default [
     {
         data: new SlashCommandBuilder().setName("help").setDescription("このbotのヘルプを表示します"),
@@ -16,7 +14,7 @@ export default [
                 })
                 .setTitle("ヘルプ")
                 .setDescription("コマンド一覧")
-                .addFields(client.commands.map((e) => ({ name: `/${e.data.name}`, value: e.data.description })));
+                .addFields(interaction.client.commands.map((e) => ({ name: `/${e.data.name}`, value: e.data.description })));
             interaction.reply({ embeds: [help] });
         },
     },
