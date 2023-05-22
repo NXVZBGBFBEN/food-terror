@@ -1,5 +1,8 @@
-/** @format */
+/**
+ * @format
+ */
 
+import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import url from "url";
@@ -7,6 +10,8 @@ import url from "url";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import schedule from "node-schedule";
 
+
+export const scheduledJobs = [];
 export default [
     {
         data: new SlashCommandBuilder()
@@ -29,9 +34,9 @@ export default [
         async execute(interaction) {
             // 入力されたoptionの代入
             const receivedTime = interaction.options.getString("日時");
-            let receivedStringName = interaction.options.getString("投稿者");
-            let receivedStringDish = interaction.options.getString("料理名");
-            let receivedStringExplanation = interaction.options.getString("説明");
+            const receivedStringName = interaction.options.getString("投稿者") ?? "匿名";
+            const receivedStringDish = interaction.options.getString("料理名") ?? "料理名不明";
+            const receivedStringExplanation = interaction.options.getString("説明") ?? "説明無し";
             const receivedAttachment = interaction.options.getAttachment("画像");
             const guerrillaSwitch = interaction.options.getString("ゲリラモード") === "on";
 
@@ -41,24 +46,28 @@ export default [
             const jsonTarget = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
 
             // ゲリラモード用
-            // 評価する式 ? trueの場合の処理 : falseの場合の処理
             const targetChannel = guerrillaSwitch ? jsonTarget.targetChannel : interaction.channelId;
             const targetGuild = interaction.guildId;
 
+            // prettier-ignore
+            /** @type {import(discord.js).TextChannel} */
+            const currentChannel = await interaction.client
+                .guilds.cache.get(targetGuild)
+                .channels.cache.get(targetChannel);
+
             // 例外処理
-            if (receivedStringName == null) {
-                receivedStringName = "匿名";
-            }
-            if (receivedStringDish == null) {
-                receivedStringDish = "料理名不明";
-            }
-            if (receivedStringExplanation == null) {
-                receivedStringExplanation = "説明無し";
-            }
             if (receivedAttachment == null) {
                 await interaction.reply({ content: "画像が無かったら飯テロはできないよ！", ephemeral: true });
                 return;
             }
+
+            /** @type {any} */
+            const dishDescription = [
+                {
+                    name: receivedStringDish,
+                    value: receivedStringExplanation,
+                },
+            ];
 
             // embedのセット
             const embedFood = new EmbedBuilder()
@@ -67,29 +76,16 @@ export default [
                     name: "food_terror",
                 })
                 .setDescription(`投稿者:${receivedStringName}`)
-                .setFields([
-                    {
-                        name: receivedStringDish,
-                        value: receivedStringExplanation,
-                    },
-                ])
+                .setFields(dishDescription)
                 .setImage(receivedAttachment.url);
 
             // 即時実行
             if (receivedTime == null) {
                 // 受付確認
                 await interaction.reply({ content: "飯テロを受付ました", ephemeral: true });
-                // prettier-ignore
-                await interaction.client
-                    .guilds.cache.get(targetGuild)
-                    .channels.cache.get(targetChannel)
-                    .send({embeds: [embedFood]});
+                await currentChannel.send({ embeds: [embedFood] });
                 return;
             }
-
-            // 前:月日付時間分
-            // 後:分時間日付月
-            // const remakeTime = `00 ${arrayTime[3]} ${arrayTime[2]} ${arrayTime[1]} ${arrayTime[0]} *`;
 
             const arrayTime = receivedTime.split("-");
             const date = new Date();
@@ -101,26 +97,23 @@ export default [
                 parseInt(arrayTime[3], 10)
             );
 
-            /* 
-            const jobData = [
-                {
-                    executionDate,
-                    targetGuild,
-                    targetChannel,
-                    item: embedFood,
-                },
-            ];
-             */
+            const jobId = crypto.randomUUID();
+
+            scheduledJobs.push({
+                jobId,
+                executionDate,
+                targetGuild,
+                targetChannel,
+                embedFood,
+            });
 
             // 受付確認
             await interaction.reply({ content: "飯テロを受付ました", ephemeral: true });
             // 実行(時間指定)
             await schedule.scheduleJob(executionDate, async () => {
-                // prettier-ignore
-                await interaction.client
-                    .guilds.cache.get(targetGuild)
-                    .channels.cache.get(targetChannel)
-                    .send({embeds: [embedFood]});
+                await currentChannel.send({ embeds: [embedFood] });
+                const jobIndex = scheduledJobs.findIndex((job) => job.jobId === jobId);
+                scheduledJobs.splice(jobIndex, 1);
             });
         },
     },
