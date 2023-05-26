@@ -46,7 +46,7 @@ export default [
             const jsonTarget = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
 
             // ゲリラモード用
-            const targetChannel = guerrillaSwitch ? jsonTarget.targetChannel : interaction.channelId;
+            const targetChannel = guerrillaSwitch ? jsonTarget.channelID[jsonTarget.guildID.indexOf(interaction.guildId)] : interaction.channelId;
             const targetGuild = interaction.guildId;
 
             // prettier-ignore
