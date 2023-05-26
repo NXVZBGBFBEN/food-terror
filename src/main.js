@@ -91,8 +91,6 @@ client.on(Events.MessageCreate, async (message) => {
     idsObj.channelID[indexId] = key[biggestVal];
     idsObj.msgLog[indexId] = aryLog;
 
-    console.log(idsObj);
-
     // JSON書き込み
     fs.writeFileSync(jsonPath, JSON.stringify(idsObj));
 
