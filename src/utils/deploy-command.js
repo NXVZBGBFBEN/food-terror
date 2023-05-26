@@ -19,7 +19,9 @@ const rest = new REST({ version: "10" }).setToken(config.get("token"));
         .catch((e) => {
             console.error(`[LOAD-COMMAND]: ERR: ${e}`);
         });
-    try {
+//    try {
+
+        /*
         let route;
         let commandKind;
         switch (process.env.NODE_ENV) {
@@ -36,7 +38,7 @@ const rest = new REST({ version: "10" }).setToken(config.get("token"));
         }
         const commandData = await rest.put(route, { body: commands });
         console.log(`[REGISTERING-COMMAND]: OK: ${commandData.length} ${commandKind} command(s) registered`);
-    } catch (e) {
+/*    } catch (e) {
         console.error(`[REGISTERING-COMMAND]: ERR: ${e}`);
-    }
+    } */
 })();
