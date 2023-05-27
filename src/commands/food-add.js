@@ -10,7 +10,6 @@ import url from "url";
 import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 import schedule from "node-schedule";
 
-
 export const scheduledJobs = [];
 export default [
     {
@@ -46,7 +45,7 @@ export default [
             const jsonTarget = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
 
             // ゲリラモード用
-            const targetChannel = guerrillaSwitch ? jsonTarget.targetChannel : interaction.channelId;
+            const targetChannel = guerrillaSwitch ? jsonTarget.channelID[jsonTarget.guildID.indexOf(interaction.guildId)] : interaction.channelId;
             const targetGuild = interaction.guildId;
 
             // prettier-ignore
@@ -104,7 +103,17 @@ export default [
                 executionDate,
                 targetGuild,
                 targetChannel,
-                embedFood,
+                author: {
+                    displayName: receivedStringName,
+                    id: interaction.member.id,
+                },
+                dish: {
+                    name: receivedStringDish,
+                    description: receivedStringExplanation,
+                },
+                image: receivedAttachment.url,
+                date,
+                guerrillaSwitch,
             });
 
             // 受付確認
