@@ -45,7 +45,7 @@ export default [
 
             /* Button作成 */
             const backButton = new ButtonBuilder().setCustomId("backward").setLabel("◀️ Back").setStyle(ButtonStyle.Secondary);
-            const forwardButton = new ButtonBuilder().setCustomId("forward").setLabel("▶️ Forward").setStyle(ButtonStyle.Secondary);
+            const forwardButton = new ButtonBuilder().setCustomId("forward").setLabel("Forward ▶️").setStyle(ButtonStyle.Secondary);
             const buttons = new ActionRowBuilder().addComponents(/** @type {any} */ backButton, /** @type {any} */ forwardButton);
 
             /* 初回送信 */
