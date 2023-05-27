@@ -43,9 +43,11 @@ export default [
             const DIR_NAME = path.dirname(path.dirname(FILE_NAME));
             const jsonPath = path.resolve(DIR_NAME, "channel-target.json");
             const jsonTarget = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+            const indexJson = jsonTarget.guildID.indexOf(interaction.guildId);
 
             // ゲリラモード用
-            const targetChannel = guerrillaSwitch ? jsonTarget.channelID[jsonTarget.guildID.indexOf(interaction.guildId)] : interaction.channelId;
+            const targetChannel =
+                guerrillaSwitch && jsonTarget.channelID[indexJson] != null ? jsonTarget.channelID[indexJson] : interaction.channelId;
             const targetGuild = interaction.guildId;
 
             // prettier-ignore
@@ -82,7 +84,12 @@ export default [
             if (receivedTime == null) {
                 // 受付確認
                 await interaction.reply({ content: "飯テロを受付ました", ephemeral: true });
-                await currentChannel.send({ embeds: [embedFood] });
+                const sentTerror = await currentChannel.send({ embeds: [embedFood] });
+                if (guerrillaSwitch) {
+                    await setTimeout(() => {
+                        sentTerror.delete();
+                    }, 60000);
+                }
                 return;
             }
 
@@ -120,7 +127,12 @@ export default [
             await interaction.reply({ content: "飯テロを受付ました", ephemeral: true });
             // 実行(時間指定)
             await schedule.scheduleJob(executionDate, async () => {
-                await currentChannel.send({ embeds: [embedFood] });
+                const sentTerror = await currentChannel.send({ embeds: [embedFood] });
+                if (guerrillaSwitch) {
+                    await setTimeout(() => {
+                        sentTerror.delete();
+                    }, 60000);
+                }
                 const jobIndex = scheduledJobs.findIndex((job) => job.jobId === jobId);
                 scheduledJobs.splice(jobIndex, 1);
             });
