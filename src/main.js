@@ -5,7 +5,7 @@ import path from "path";
 import url from "url";
 
 import config from "config";
-import { Client, Collection, Events, GatewayIntentBits } from "discord.js";
+import {Client, Collection, Events, GatewayIntentBits} from "discord.js";
 
 import loadCommand from "./functions/load-command.js";
 
@@ -20,11 +20,8 @@ const client = new Client({
 
 client.commands = new Collection();
 
-/* JSON初期化 */
-fs.writeFileSync(jsonPath, '{"targetChannel":""}');
-
 /* JSON読み込み */
-let channelTarget = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+const channelTarget = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
 console.log(`load: ${JSON.stringify(channelTarget)}`);
 
 /* スラッシュコマンド読み込み */
@@ -51,42 +48,52 @@ client.on(Events.InteractionCreate, async (interaction) => {
         await command.execute(interaction);
         console.log(`[SLASH-COMMAND]: OK: \`/${command.data.name}\``);
     } catch (e) {
-        await interaction.reply({ content: "エラーが発生しました．管理者に連絡してください．", ephemeral: true });
+        await interaction.reply({content: "エラーが発生しました．管理者に連絡してください．", ephemeral: true});
         console.error(`[SLASH-COMMAND]: ERR: ${e}`);
     }
 });
 
-const channelLog = [];
-let channelCount = {};
-let i = 0;
+const idsObj = {  "guildID":[], "channelID": [], "msgLog":[], "i":[]}
+let aryLog = [];
 
 client.on(Events.MessageCreate, async (message) => {
-    // 直近10投稿が最も多く投稿されたチャンネルを選出
-    channelCount = {};
-    channelLog[i] = message.channel.id;
-    i += 1;
-    if (i > 9) i = 0;
 
-    for (let w = 0; w < channelLog.length; w++) {
-        const elm = channelLog[w];
-        channelCount[elm] = (channelCount[elm] || 0) + 1;
+    if(!idsObj.guildID.includes(`${message.guildId}`)){
+        idsObj.guildID[idsObj.guildID.length] = message.guildId;
+        idsObj.channelID[idsObj.channelID.length] = message.channel;
+        idsObj.msgLog[idsObj.msgLog.length] = [];
+        idsObj.i[idsObj.i.length] = 0;
     }
 
-    const keys = Object.keys(channelCount);
-    const objs = Object.values(channelCount);
+    const indexId = idsObj.guildID.indexOf(`${message.guildId}`);
 
-    let biggerObj = 0;
+    aryLog = idsObj.msgLog[indexId];
+    aryLog[idsObj.i[indexId]] = message.channelId;
 
-    for (let h = 0; h < objs.length; h++) {
-        if (biggerObj <= objs[h] + 0) biggerObj = h;
+    if(idsObj.i[indexId] < 9)idsObj.i[indexId] += 1;
+    else idsObj.i[indexId]  = 0;
+
+    const counter = {};
+
+    aryLog.forEach((i) => {
+        counter[i] = (counter[i] || 0) + 1;
+    });
+
+    let biggestVal = 0;
+
+    const key = Object.keys(counter);
+    const val = Object.values(counter);
+
+    for(let i = 0; i < val.length; i++){
+        if(biggestVal <= val[i])biggestVal = i;
     }
 
-    channelTarget = {
-        targetChannel: keys[biggerObj], // in the message.channel.id
-    };
+    idsObj.channelID[indexId] = key[biggestVal];
+    idsObj.msgLog[indexId] = aryLog;
 
     // JSON書き込み
-    fs.writeFileSync(jsonPath, JSON.stringify(channelTarget));
+    fs.writeFileSync(jsonPath, JSON.stringify(idsObj));
+
 });
 
 client

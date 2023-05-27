@@ -25,11 +25,11 @@ const rest = new REST({ version: "10" }).setToken(config.get("token"));
         switch (process.env.NODE_ENV) {
             case "development":
                 commandKind = "guild";
-                route = Routes.applicationGuildCommands(config.get("applicationId"), config.get("guildId"));
+                route = await Routes.applicationGuildCommands(config.get("applicationId"), config.get("guildId"));
                 break;
             case "production" || "staging":
                 commandKind = "global";
-                route = Routes.applicationCommands(config.get("applicationId"));
+                route = await Routes.applicationCommands(config.get("applicationId"));
                 break;
             default:
                 break;
