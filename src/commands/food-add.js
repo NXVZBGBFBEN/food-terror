@@ -43,10 +43,12 @@ export default [
             const DIR_NAME = path.dirname(path.dirname(FILE_NAME));
             const jsonPath = path.resolve(DIR_NAME, "channel-target.json");
             const jsonTarget = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
+            const indexJson = jsonTarget.guildID.indexOf(interaction.guildId);
 
             // ゲリラモード用
-            const targetChannel = guerrillaSwitch ? jsonTarget.channelID[jsonTarget.guildID.indexOf(interaction.guildId)] : interaction.channelId;
+            const targetChannel = (guerrillaSwitch && (jsonTarget.channelID[indexJson] != null)) ? jsonTarget.channelID[indexJson] : interaction.channelId;
             const targetGuild = interaction.guildId;
+
 
             // prettier-ignore
             /** @type {import(discord.js).TextChannel} */
