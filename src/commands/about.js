@@ -16,7 +16,7 @@ export default [
                 .addFields([
                     {
                         name: "バージョン",
-                        value: "beta",
+                        value: "v1.0.0-beta.1",
                     },
                     {
                         name: "開発者",
