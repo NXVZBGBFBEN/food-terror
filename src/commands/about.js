@@ -4,7 +4,7 @@ import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
 export default [
     {
-        data: new SlashCommandBuilder().setName("about").setDescription("このbotの情報を表示します。"),
+        data: new SlashCommandBuilder().setName("about").setDescription("このbotの情報を表示します"),
         async execute(interaction) {
             const about = new EmbedBuilder()
                 .setColor(0xbbdd22)
@@ -16,7 +16,7 @@ export default [
                 .addFields([
                     {
                         name: "バージョン",
-                        value: "beta",
+                        value: "v1.0.0-beta.1",
                     },
                     {
                         name: "開発者",
