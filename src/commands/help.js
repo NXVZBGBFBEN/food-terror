@@ -4,7 +4,7 @@ import { EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
 export default [
     {
-        data: new SlashCommandBuilder().setName("help").setDescription("このbotのヘルプを表示します。"),
+        data: new SlashCommandBuilder().setName("help").setDescription("このbotのヘルプを表示します"),
         async execute(interaction) {
             const help = new EmbedBuilder()
                 .setColor(0x33aaee)

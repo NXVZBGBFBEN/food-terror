@@ -15,7 +15,7 @@ export default [
     {
         data: new SlashCommandBuilder()
             .setName("food_add")
-            .setDescription("画像を登録し、指定した時間に投稿します。")
+            .setDescription("画像を登録し、指定した時間に投稿します")
             .addStringOption((option) =>
                 option.setName("日時").setDescription("送信する時間をMM-dd-hh-mmの形式で指定できます").setRequired(false)
             )
@@ -26,7 +26,7 @@ export default [
             .addStringOption((option) =>
                 option
                     .setName("ゲリラモード")
-                    .setDescription("onと入力した場合、直近で最もメッセージが送信されたチャンネルに投稿します。")
+                    .setDescription("onと入力した場合、直近で最もメッセージが送信されたチャンネルに投稿します")
                     .setRequired(false)
             ),
 
