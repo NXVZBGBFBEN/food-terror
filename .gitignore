@@ -301,3 +301,5 @@ $RECYCLE.BIN/
 
 # node-config
 /config/
+
+channel-target.json

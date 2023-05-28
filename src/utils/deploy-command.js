@@ -20,11 +20,23 @@ const rest = new REST({ version: "10" }).setToken(config.get("token"));
             console.error(`[LOAD-COMMAND]: ERR: ${e}`);
         });
     try {
-        const commandData = await rest.put(Routes.applicationGuildCommands(config.get("applicationId"), config.get("guildId")), {
-            body: commands,
-        });
-        console.log(`[REGISTER-COMMAND/GUILD]: OK: ${commandData.length} command(s) registered`);
+        let route;
+        let commandKind;
+        switch (process.env.NODE_ENV) {
+            case "development":
+                commandKind = "guild";
+                route = await Routes.applicationGuildCommands(config.get("applicationId"), config.get("guildId"));
+                break;
+            case "production" || "staging":
+                commandKind = "global";
+                route = await Routes.applicationCommands(config.get("applicationId"));
+                break;
+            default:
+                break;
+        }
+        const commandData = await rest.put(route, { body: commands });
+        console.log(`[REGISTERING-COMMAND]: OK: ${commandData.length} ${commandKind} command(s) registered`);
     } catch (e) {
-        console.error(`[REGISTER-COMMAND/GUILD]: ERR: ${e}`);
+        console.error(`[REGISTERING-COMMAND]: ERR: ${e}`);
     }
 })();
