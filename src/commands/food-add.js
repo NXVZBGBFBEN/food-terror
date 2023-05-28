@@ -83,7 +83,7 @@ export default [
             // 即時実行
             if (receivedTime == null) {
                 // 受付確認
-                await interaction.reply({ content: "飯テロを受付ました", ephemeral: true });
+                await interaction.reply({ content: "飯テロを受付けました", ephemeral: true });
                 const sentTerror = await currentChannel.send({ embeds: [embedFood] });
                 if (guerrillaSwitch) {
                     await setTimeout(() => {
@@ -124,7 +124,7 @@ export default [
             });
 
             // 受付確認
-            await interaction.reply({ content: "飯テロを受付ました", ephemeral: true });
+            await interaction.reply({ content: "飯テロを受付けました", ephemeral: true });
             // 実行(時間指定)
             await schedule.scheduleJob(executionDate, async () => {
                 const sentTerror = await currentChannel.send({ embeds: [embedFood] });
