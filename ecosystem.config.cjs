@@ -16,7 +16,8 @@ module.exports = {
                 NODE_ENV: "production"
             },
             time: true,
-            watch: true,
+            watch: ["./src/"],
+            ignore_watch: ["./src/channel-target.json"],
         },
     ],
 };
