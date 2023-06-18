@@ -16,19 +16,21 @@ export default [
         data: new SlashCommandBuilder()
             .setName("food_add")
             .setDescription("画像を登録し、指定した時間に投稿します")
+            .addAttachmentOption((option) => option.setName("画像").setDescription("ファイルを添付できます").setRequired(true))
+            .addStringOption((option) =>
+                option
+                    .setName("ゲリラモード")
+                    .setDescription("onと入力した場合、直近で最もメッセージが送信されたチャンネルに投稿します")
+                    .addChoices({ name: "on", value: "on" }, { name: "off", value: "off" })
+                    .setRequired(true)
+            )
             .addStringOption((option) =>
                 option.setName("日時").setDescription("送信する時間をMM-dd-hh-mmの形式で指定できます").setRequired(false)
             )
             .addStringOption((option) => option.setName("説明").setDescription("画像についての説明を書けます").setRequired(false))
             .addStringOption((option) => option.setName("投稿者").setDescription("投稿者の名前を入力できます").setRequired(false))
-            .addStringOption((option) => option.setName("料理名").setDescription("料理名を入力できます").setRequired(false))
-            .addAttachmentOption((option) => option.setName("画像").setDescription("ファイルを添付できます").setRequired(false))
-            .addStringOption((option) =>
-                option
-                    .setName("ゲリラモード")
-                    .setDescription("onと入力した場合、直近で最もメッセージが送信されたチャンネルに投稿します")
-                    .setRequired(false)
-            ),
+            .addStringOption((option) => option.setName("料理名").setDescription("料理名を入力できます").setRequired(false)),
+
 
         async execute(interaction) {
             // 入力されたoptionの代入
@@ -55,12 +57,6 @@ export default [
             const currentChannel = await interaction.client
                 .guilds.cache.get(targetGuild)
                 .channels.cache.get(targetChannel);
-
-            // 例外処理
-            if (receivedAttachment == null) {
-                await interaction.reply({ content: "画像が無かったら飯テロはできないよ！", ephemeral: true });
-                return;
-            }
 
             /** @type {any} */
             const dishDescription = [
